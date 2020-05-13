@@ -27,7 +27,8 @@ public:
 	virtual ~Player();
 
 	//get
-	const sf::Vector2f& getPosition();
+	const sf::Vector2f& getPosition() const;
+	const sf::FloatRect getBounds() const;
 
 	//methodes
 	void move(const float dirX, const float dirY);

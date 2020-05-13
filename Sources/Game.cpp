@@ -17,7 +17,12 @@ void Game::initTextures()
 void Game::initPlayer()
 {
 	this->p_player = new Player();
-	this->p_enemy = new Enemy(10.f,50.f);
+}
+
+void Game::initEnemies()
+{
+	this->p_spawnTimerMax = 50.f;
+	this->p_spawnTimer = this->p_spawnTimerMax;
 }
 
 
@@ -27,6 +32,7 @@ Game::Game()
 	this->initWindow();
 	this->initTextures();
 	this->initPlayer();
+	this->initEnemies();
 }
 
 Game::~Game()
@@ -44,6 +50,12 @@ Game::~Game()
 	for (auto *b : this->p_bullets)
 	{
 		delete b;
+	}
+
+	//delete all enemies in the vector
+	for (auto *enemy : this->p_enemies)
+	{
+		delete enemy;
 	}
 }
 
@@ -88,7 +100,7 @@ void Game::updateInputs()
 	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Mouse::isButtonPressed(sf::Mouse::Left)) && this->p_player->canAttack())
 	{
 		this->p_bullets.push_back(new Bullet(this->texturesMap["BULLET"],
-			this->p_player->getPosition().x + 32, 
+			this->p_player->getPosition().x + (this->p_player->getBounds().width / 2.f) - 5, 
 			this->p_player->getPosition().y, 
 			0.f, -1.f, 2.f));
 	}
@@ -114,12 +126,28 @@ void Game::updateBullets()
 	}
 }
 
+void Game::updateEnemies()
+{
+	if (this->p_spawnTimer >= this->p_spawnTimerMax)
+	{
+		this->p_enemies.push_back(new Enemy(rand() % this->p_window->getSize().x, 10.f));
+		this->p_spawnTimer = 0.f;
+	}
+	this->p_spawnTimer += 0.5f;
+
+	for (auto *enemy : this->p_enemies)
+	{
+		enemy->update();
+	}
+}
+
 void Game::update()
 {
 	this->updatePollevent();
 	this->updateInputs();
 	this->updateBullets();
 	this->p_player->update();
+	this->updateEnemies();
 }
 
 void Game::render()
@@ -130,13 +158,16 @@ void Game::render()
 	this->p_player->render(this->p_window);
 
 	//bullets
-	for (auto *b : this->p_bullets)
+	for (auto *bullet : this->p_bullets)
 	{
-		b->render(this->p_window);
+		bullet->render(this->p_window);
 	}
 
-	//enemy
-	this->p_enemy->render(this->p_window);
+	//Enemies
+	for (auto *enemy : this->p_enemies)
+	{
+		enemy->render(this->p_window);
+	}
 
 	//affichage
 	this->p_window->display();

@@ -22,12 +22,16 @@ private:
 	Player* p_player;
 
 	//Enemies
-	Enemy* p_enemy;
+	std::vector<Enemy*> p_enemies;
+	float p_spawnTimer;
+	float p_spawnTimerMax;
+
 
 	//privates methodes
 	void initWindow();
 	void initTextures();
 	void initPlayer();
+	void initEnemies();
 
 public:
 	//constructors
@@ -39,6 +43,7 @@ public:
 	void updatePollevent();
 	void updateInputs();
 	void updateBullets();
+	void updateEnemies();
 	void update();
 	void render();
 };

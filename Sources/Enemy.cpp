@@ -5,6 +5,7 @@ void Enemy::initShape()
 {
 	this->p_shape.setRadius(rand() % 20 + 7);
 	this->p_shape.setPointCount(rand() % 6 + 3);
+	this->p_shape.setFillColor(sf::Color(rand() % 225 + 30, rand() % 225 + 30, rand() % 225 + 30));
 }
 
 void Enemy::initVariables()
@@ -29,6 +30,7 @@ Enemy::~Enemy()
 {
 }
 
+//methodes
 void Enemy::update()
 {
 }
@@ -37,6 +39,3 @@ void Enemy::render(sf::RenderTarget* target)
 {
 	target->draw(this->p_shape);
 }
-
-
-//methodes

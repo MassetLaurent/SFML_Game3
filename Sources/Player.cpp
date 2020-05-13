@@ -38,9 +38,14 @@ Player::~Player()
 
 
 //get
-const sf::Vector2f& Player::getPosition()
+const sf::Vector2f& Player::getPosition() const
 {
 	return this->p_playerSprite.getPosition();
+}
+
+const sf::FloatRect Player::getBounds() const
+{
+	return this->p_playerSprite.getGlobalBounds();
 }
 
 
