@@ -1,15 +1,5 @@
 #include "Bullet.h"
 
-void Bullet::initTexture()
-{
-}
-
-void Bullet::initSprite()
-{
-}
-
-
-
 //constructors
 Bullet::Bullet()
 {
@@ -30,14 +20,11 @@ Bullet::~Bullet()
 }
 
 
-
 //get
-
 const sf::FloatRect Bullet::globalBounds() const
 {
 	return this->p_bulletSprite.getGlobalBounds();
 }
-
 
 
 //methodes

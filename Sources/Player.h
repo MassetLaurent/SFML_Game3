@@ -12,10 +12,13 @@ private:
 	sf::Texture p_playerTexture;
 	sf::Sprite p_playerSprite;
 	float p_movementSpeed;
+	float p_attackCooldown;
+	float p_attackCooldownMax;
 
 	//privates methodes
 	void initTexture();
 	void initSprite();
+	void initVariables();
 
 
 public:
@@ -28,8 +31,10 @@ public:
 
 	//methodes
 	void move(const float dirX, const float dirY);
+	void updateAttackCooldown();
+	bool canAttack();
 	void update();
-	void render(sf::RenderTarget& target);
+	void render(sf::RenderTarget* target);
 };
 
 #endif // !DEF_PLAYER

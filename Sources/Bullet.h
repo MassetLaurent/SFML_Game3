@@ -12,11 +12,7 @@ private:
 	sf::Vector2f p_direction;
 
 	float p_movementSpeed;
-
-	//private methodes
-	void initTexture();
-	void initSprite();
-
+	
 public:
 	//constructor
 	Bullet();

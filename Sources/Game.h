@@ -6,6 +6,7 @@
 
 #include "Player.h"
 #include "Bullet.h"
+#include "Enemy.h"
 
 class Game
 {
@@ -20,6 +21,9 @@ private:
 	//player
 	Player* p_player;
 
+	//Enemies
+	Enemy* p_enemy;
+
 	//privates methodes
 	void initWindow();
 	void initTextures();
@@ -30,17 +34,13 @@ public:
 	Game();
 	virtual ~Game();
 
-	//get
-
 	//methodes
 	void run();
-
 	void updatePollevent();
 	void updateInputs();
 	void updateBullets();
 	void update();
 	void render();
-
 };
 
 #endif // !DEF_GAME

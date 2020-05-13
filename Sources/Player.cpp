@@ -16,26 +16,32 @@ void Player::initSprite()
 	this->p_playerSprite.scale(sf::Vector2f(0.1f, 0.1f));
 }
 
+void Player::initVariables()
+{
+	this->p_movementSpeed = 3.f;
+	this->p_attackCooldownMax = 20.f;
+	this->p_attackCooldown = this->p_attackCooldownMax;
+}
+
+
 //constructors
 Player::Player()
 {
 	this->initTexture();
 	this->initSprite();
-	this->p_movementSpeed = 5.f;
+	this->initVariables();
 }
 
 Player::~Player()
 {
 }
 
+
+//get
 const sf::Vector2f& Player::getPosition()
 {
 	return this->p_playerSprite.getPosition();
 }
-
-
-
-//get
 
 
 //methodes
@@ -44,11 +50,29 @@ void Player::move(const float dirX, const float dirY)
 	this->p_playerSprite.move(this->p_movementSpeed * dirX, this->p_movementSpeed * dirY);
 }
 
-void Player::update()
+void Player::updateAttackCooldown()
 {
+	if (this->p_attackCooldown < this->p_attackCooldownMax)
+		this->p_attackCooldown += 0.5f;
 }
 
-void Player::render(sf::RenderTarget& target)
+bool Player::canAttack()
 {
-	target.draw(this->p_playerSprite);
+	if (this->p_attackCooldown >= this->p_attackCooldownMax)
+	{
+		this->p_attackCooldown = 0.f;
+		return true;
+	}
+
+		return false;
+}
+
+void Player::update()
+{
+	this->updateAttackCooldown();
+}
+
+void Player::render(sf::RenderTarget* target)
+{
+	target->draw(this->p_playerSprite);
 }
