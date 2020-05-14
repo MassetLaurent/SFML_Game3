@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+#include <sstream>
 
 #include "Player.h"
 #include "Bullet.h"
@@ -21,13 +22,17 @@ private:
 	//GUI
 	sf::Font p_font;
 	sf::Text p_pointText;
+	sf::Text p_gameOverText;
+	sf::RectangleShape p_playerHpBar;
+	sf::RectangleShape p_playerHpBarBack;
 
 	//world
 	sf::Texture p_worldBackgroundTexture;
 	sf::Sprite p_worldBackground;
-
+	
 	//player
 	Player* p_player;
+	int p_points;
 
 	//Enemies
 	std::vector<Enemy*> p_enemies;
@@ -37,11 +42,12 @@ private:
 	//privates methodes
 	void initWindow();
 	void initTextures();
-	void initGUI();
+	void initVariables();
 	void initWorld();
-
 	void initPlayer();
 	void initEnemies();
+	void initGUI();
+
 
 public:
 	//constructors

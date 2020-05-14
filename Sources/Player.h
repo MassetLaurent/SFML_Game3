@@ -14,6 +14,8 @@ private:
 	float p_movementSpeed;
 	float p_attackCooldown;
 	float p_attackCooldownMax;
+	int p_hp;
+	int p_hpMax;
 
 	//privates methodes
 	void initTexture();
@@ -29,10 +31,14 @@ public:
 	//get
 	const sf::Vector2f& getPosition() const;
 	const sf::FloatRect getBounds() const;
+	const int& getHp() const;
+	const int& getHpMax() const;
 
 	//set
 	void setPosition(const sf::Vector2f pos);
 	void setPosition(const float pos_x, const float pos_y);
+	void takeDamage(const int dmg);
+	void setHp(const int nbHp);
 
 	//methodes
 	void move(const float dirX, const float dirY);

@@ -14,18 +14,9 @@ void Game::initTextures()
 	this->texturesMap["BULLET"]->loadFromFile("Textures/bullet.png");
 }
 
-void Game::initGUI()
+void Game::initVariables()
 {
-	//load font
-	if (!this->p_font.loadFromFile("Fonts/PixellettersFull.ttf"))
-		std::cout << "! ERROR::GAME::updateGui() = Fail to load font PixellettersFull.\n";
-	
-	//init points
-	this->p_pointText.setFont(this->p_font);
-	this->p_pointText.setCharacterSize(36);
-	this->p_pointText.setFillColor(sf::Color::White);
-	this->p_pointText.setString("coucou");
-	this->p_pointText.setPosition(20.f, 10.f);
+	this->p_points = 0;
 }
 
 void Game::initWorld()
@@ -38,6 +29,9 @@ void Game::initWorld()
 void Game::initPlayer()
 {
 	this->p_player = new Player();
+
+	this->p_player->setPosition((this->p_window->getSize().x / 2) - (this->p_player->getBounds().width / 2),
+		this->p_window->getSize().y - (this->p_player->getBounds().height / 2));
 }
 
 void Game::initEnemies()
@@ -46,17 +40,53 @@ void Game::initEnemies()
 	this->p_spawnTimer = this->p_spawnTimerMax;
 }
 
+void Game::initGUI()
+{
+	//load font
+	if (!this->p_font.loadFromFile("Fonts/PixellettersFull.ttf"))
+		std::cout << "! ERROR::GAME::updateGui() = Fail to load font PixellettersFull.\n";
+	
+	//init points
+	this->p_pointText.setFont(this->p_font);
+	this->p_pointText.setCharacterSize(24);
+	this->p_pointText.setFillColor(sf::Color::White);
+	this->p_pointText.setString("0");
+	this->p_pointText.setPosition(20.f, 20.f);
+
+	//init game over text
+	this->p_gameOverText.setFont(this->p_font);
+	this->p_gameOverText.setCharacterSize(96);
+	this->p_gameOverText.setFillColor(sf::Color::Red);
+	this->p_gameOverText.setString("GAME OVER !");
+	this->p_gameOverText.setStyle(sf::Text::Underlined | sf::Text::Bold);
+	this->p_gameOverText.setPosition(
+		(this->p_window->getSize().x / 2.f) - (this->p_gameOverText.getGlobalBounds().width / 2.f), 
+		(this->p_window->getSize().y / 2.f) - (this->p_gameOverText.getGlobalBounds().height + 20.f)
+	);
+
+	//player health barre
+	this->p_playerHpBar.setSize(sf::Vector2f(200.f, 10.f));
+	this->p_playerHpBar.setFillColor(sf::Color::Red);
+	this->p_playerHpBar.setPosition(20.f, 10.f);
+
+	//player health barre background
+	this->p_playerHpBarBack = this->p_playerHpBar;
+	this->p_playerHpBarBack.setFillColor(sf::Color::Transparent);
+	this->p_playerHpBarBack.setOutlineThickness(1.f);
+	this->p_playerHpBarBack.setOutlineColor(sf::Color::Yellow);
+}
+
 
 //constructors
 Game::Game()
 {
 	this->initWindow();
 	this->initTextures();
-	this->initGUI();
+	this->initVariables();
 	this->initWorld();
-
 	this->initPlayer();
 	this->initEnemies();
+	this->initGUI();
 }
 
 Game::~Game()
@@ -89,7 +119,10 @@ void Game::run()
 {
 	while (this->p_window->isOpen())
 	{
-		this->update();
+		this->updatePollevent();
+		if(this->p_player->getHp() > 0)
+			this->update();
+
 		this->render();
 	}	
 }
@@ -97,7 +130,6 @@ void Game::run()
 	//updates methodes
 void Game::update()
 {
-	this->updatePollevent();
 	this->updateInputs();
 
 	this->p_player->update();
@@ -110,6 +142,7 @@ void Game::update()
 	this->updateGUI();
 	this->updateWorld();
 }
+
 
 void Game::updatePollevent()
 {
@@ -147,7 +180,6 @@ void Game::updateInputs()
 	}
 }
 
-
 void Game::updateCollision()
 {
 	//left collision
@@ -155,7 +187,7 @@ void Game::updateCollision()
 		this->p_player->setPosition(0.f, this->p_player->getBounds().top);
 	
 	//right
-	if (this->p_player->getBounds().left + this->p_player->getBounds().width > this->p_window->getSize().x)
+	else if (this->p_player->getBounds().left + this->p_player->getBounds().width > this->p_window->getSize().x)
 		this->p_player->setPosition(this->p_window->getSize().x - this->p_player->getBounds().width, this->p_player->getBounds().top);
 	
 	//up
@@ -163,10 +195,9 @@ void Game::updateCollision()
 		this->p_player->setPosition(this->p_player->getBounds().left, 0.f);
 
 	//down
-	if (this->p_player->getBounds().top + this->p_player->getBounds().height > this->p_window->getSize().y)
+	else if (this->p_player->getBounds().top + this->p_player->getBounds().height > this->p_window->getSize().y)
 		this->p_player->setPosition(this->p_player->getBounds().left, this->p_window->getSize().y - this->p_player->getBounds().height);
 }
-
 
 void Game::updateEnemies()
 {
@@ -186,11 +217,27 @@ void Game::updateEnemies()
 	{
 		enemy->update();
 
+		//if enemy go out of the screen
 		if (enemy->getBounds().top > this->p_window->getSize().y)
 		{
 			delete this->p_enemies.at(counter);
 			this->p_enemies.erase(this->p_enemies.begin() + counter);
-			counter--;
+		}
+
+		//if enemy hit player
+		else if (enemy->getBounds().intersects(this->p_player->getBounds()))
+		{
+			//remove health for the player
+			this->p_player->takeDamage(enemy->getDamages());
+			
+			//remove point in score
+			this->p_points -= enemy->getPoints();
+
+			if (this->p_points < 0)
+				this->p_points = 0;
+
+			delete this->p_enemies.at(counter);
+			this->p_enemies.erase(this->p_enemies.begin() + counter);
 		}
 		counter++;
 	}
@@ -208,7 +255,6 @@ void Game::updateBullets()
 		{
 			delete this->p_bullets.at(counter);
 			this->p_bullets.erase(this->p_bullets.begin() + counter);
-			counter--;
 		}
 		counter++;
 	}
@@ -224,6 +270,10 @@ void Game::updateCombat()
 		{
 			if (this->p_enemies[i]->getBounds().intersects(this->p_bullets[j]->globalBounds()))
 			{
+				//give point for player
+				this->p_points += this->p_enemies[i]->getPoints();
+
+				//delete enemy and bullet
 				delete this->p_enemies[i];
 				this->p_enemies.erase(this->p_enemies.begin() + i);
 				delete this->p_bullets[j];
@@ -234,14 +284,23 @@ void Game::updateCombat()
 	}
 }
 
+void Game::updateWorld()
+{
+}
 
 void Game::updateGUI()
 {
-	this->p_pointText.setString("lol");
-}
+	//player hp bar
+	float percent = static_cast<float>(this->p_player->getHp()) / this->p_player->getHpMax();
 
-void Game::updateWorld()
-{
+	this->p_playerHpBar.setSize(sf::Vector2f(this->p_playerHpBarBack.getSize().x * percent, this->p_playerHpBarBack.getSize().y));
+
+	//point counter text
+	std::stringstream ss; 
+
+	ss << "Points : " << this->p_points << std::endl;
+
+	this->p_pointText.setString(ss.str());
 }
 
 
@@ -275,9 +334,15 @@ void Game::render()
 	this->p_window->display();
 }
 
+
 void Game::renderGUI()
 {
 	this->p_window->draw(this->p_pointText);
+	this->p_window->draw(this->p_playerHpBarBack);
+	this->p_window->draw(this->p_playerHpBar);
+
+	if(this->p_player->getHp() <= 0)
+		this->p_window->draw(this->p_gameOverText);
 }
 
 void Game::renderWorld()

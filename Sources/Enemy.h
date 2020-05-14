@@ -8,7 +8,7 @@ class Enemy
 private:
 	//attributes
 	sf::CircleShape p_shape;
-
+	unsigned p_pointCount;
 	int p_hp;
 	int p_hpMax;
 	int p_damage;
@@ -16,8 +16,8 @@ private:
 	int p_type;
 	float p_speed;
 
-	void initShape();
 	void initVariables();
+	void initShape();
 
 public:
 	//constructors
@@ -26,6 +26,8 @@ public:
 
 	//get
 	const sf::FloatRect getBounds() const;
+	const int getPoints() const;
+	const int getDamages() const;
 
 	//methodes
 	void update();

@@ -21,7 +21,10 @@ void Player::initVariables()
 	this->p_movementSpeed = 2.f;
 	this->p_attackCooldownMax = 10.f;
 	this->p_attackCooldown = this->p_attackCooldownMax;
+	this->p_hpMax = 100;
+	this->p_hp = this->p_hpMax;
 }
+
 
 
 //constructors
@@ -48,6 +51,16 @@ const sf::FloatRect Player::getBounds() const
 	return this->p_playerSprite.getGlobalBounds();
 }
 
+const int& Player::getHp() const
+{
+	return this->p_hp;
+}
+
+const int & Player::getHpMax() const
+{
+	return this->p_hpMax;
+}
+
 
 //set
 void Player::setPosition(const sf::Vector2f pos)
@@ -58,6 +71,18 @@ void Player::setPosition(const sf::Vector2f pos)
 void Player::setPosition(const float pos_x, const float pos_y)
 {
 	this->p_playerSprite.setPosition(pos_x, pos_y);
+}
+
+void Player::takeDamage(const int dmg)
+{
+	this->p_hp -= dmg;
+	if (this->p_hp <= 0)
+		this->p_hp = 0;
+}
+
+void Player::setHp(const int nbHp)
+{
+	this->p_hp = nbHp;
 }
 
 
