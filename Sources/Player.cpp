@@ -18,8 +18,8 @@ void Player::initSprite()
 
 void Player::initVariables()
 {
-	this->p_movementSpeed = 3.f;
-	this->p_attackCooldownMax = 20.f;
+	this->p_movementSpeed = 2.f;
+	this->p_attackCooldownMax = 10.f;
 	this->p_attackCooldown = this->p_attackCooldownMax;
 }
 
@@ -49,6 +49,18 @@ const sf::FloatRect Player::getBounds() const
 }
 
 
+//set
+void Player::setPosition(const sf::Vector2f pos)
+{
+	this->p_playerSprite.setPosition(pos);
+}
+
+void Player::setPosition(const float pos_x, const float pos_y)
+{
+	this->p_playerSprite.setPosition(pos_x, pos_y);
+}
+
+
 //methodes
 void Player::move(const float dirX, const float dirY)
 {
@@ -58,7 +70,7 @@ void Player::move(const float dirX, const float dirY)
 void Player::updateAttackCooldown()
 {
 	if (this->p_attackCooldown < this->p_attackCooldownMax)
-		this->p_attackCooldown += 0.5f;
+		this->p_attackCooldown += 0.5f; 
 }
 
 bool Player::canAttack()

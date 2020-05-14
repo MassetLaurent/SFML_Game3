@@ -30,6 +30,10 @@ public:
 	const sf::Vector2f& getPosition() const;
 	const sf::FloatRect getBounds() const;
 
+	//set
+	void setPosition(const sf::Vector2f pos);
+	void setPosition(const float pos_x, const float pos_y);
+
 	//methodes
 	void move(const float dirX, const float dirY);
 	void updateAttackCooldown();

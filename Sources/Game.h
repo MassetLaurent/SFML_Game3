@@ -18,6 +18,14 @@ private:
 	std::map<std::string, sf::Texture*> texturesMap;
 	std::vector<Bullet*> p_bullets;
 
+	//GUI
+	sf::Font p_font;
+	sf::Text p_pointText;
+
+	//world
+	sf::Texture p_worldBackgroundTexture;
+	sf::Sprite p_worldBackground;
+
 	//player
 	Player* p_player;
 
@@ -26,10 +34,12 @@ private:
 	float p_spawnTimer;
 	float p_spawnTimerMax;
 
-
 	//privates methodes
 	void initWindow();
 	void initTextures();
+	void initGUI();
+	void initWorld();
+
 	void initPlayer();
 	void initEnemies();
 
@@ -40,12 +50,25 @@ public:
 
 	//methodes
 	void run();
+
+		//updates methodes
+	void update();
 	void updatePollevent();
 	void updateInputs();
+
+	void updateCollision();
+	
 	void updateBullets();
 	void updateEnemies();
-	void update();
+	void updateCombat();
+	
+	void updateGUI();
+	void updateWorld();
+
+		//renders methodes
 	void render();
+	void renderWorld();
+	void renderGUI();
 };
 
 #endif // !DEF_GAME

@@ -14,6 +14,7 @@ private:
 	int p_damage;
 	int p_points;
 	int p_type;
+	float p_speed;
 
 	void initShape();
 	void initVariables();
@@ -24,6 +25,7 @@ public:
 	virtual ~Enemy();
 
 	//get
+	const sf::FloatRect getBounds() const;
 
 	//methodes
 	void update();

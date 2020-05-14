@@ -15,6 +15,7 @@ void Enemy::initVariables()
 	this->p_damage = 1;
 	this->p_points = 5;
 	this->p_type = 0;
+	this->p_speed = 0.5f;
 }
 
 
@@ -30,9 +31,15 @@ Enemy::~Enemy()
 {
 }
 
+const sf::FloatRect Enemy::getBounds() const
+{
+	return this->p_shape.getGlobalBounds();
+}
+
 //methodes
 void Enemy::update()
 {
+	this->p_shape.move(0.f, this->p_speed);
 }
 
 void Enemy::render(sf::RenderTarget* target)
